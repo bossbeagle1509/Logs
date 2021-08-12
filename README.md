@@ -12,7 +12,7 @@ I intended this to be a Windows app, since I hate having to use my phone or log 
 
 # How ?
 
-I'm using Hive for this, which makes things so much simpler and let me build this in an afternoon ! As for state management....GetX ! The Batman of State Management in my opinon ;)
+I'm using Hive DB for this, which makes things so much simpler and let me build this in an afternoon ! As for state management....GetX ! The Batman of State Management in my opinon ;) Since all dependencies are native, this should run anywhere FLutter does.
 
 
 Thanks for reading 🙂
