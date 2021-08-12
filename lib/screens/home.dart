@@ -27,6 +27,8 @@ class _HomeState extends State<Home> {
     await Hive.openBox<Log>('logs');
   }
 
+  final HiveDB _hiveDB = HiveDB();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,6 +135,22 @@ class _HomeState extends State<Home> {
                                   Theme.of(context).textTheme.bodyText1!.color,
                             ),
                           ),
+                          const Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                onPressed: () =>
+                                    _hiveDB.decrementHoursSpent(index),
+                                icon: Icon(Icons.remove),
+                              ),
+                              IconButton(
+                                onPressed: () =>
+                                    _hiveDB.incrementHoursSpent(index),
+                                icon: Icon(Icons.add),
+                              )
+                            ],
+                          )
                         ],
                       ),
                     ),

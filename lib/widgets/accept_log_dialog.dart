@@ -153,10 +153,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                       child: Text(
                         'Save',
                         style: TextStyle(
-                          color: Theme.of(context)
-                              .primaryTextTheme
-                              .bodyText1!
-                              .color,
+                          color: Theme.of(context).textTheme.bodyText1!.color,
                         ),
                       ),
                     ),

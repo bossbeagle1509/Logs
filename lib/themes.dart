@@ -10,8 +10,8 @@ ThemeData logDarkMode = ThemeData.dark().copyWith(
     bodyText1: TextStyle(),
     bodyText2: TextStyle(),
   ).apply(
-    bodyColor: Colors.red,
-    displayColor: Colors.red,
+    bodyColor: Colors.white,
+    displayColor: Colors.white,
   ),
   appBarTheme: const AppBarTheme(
     color: Colors.teal,

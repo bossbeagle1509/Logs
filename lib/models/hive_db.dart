@@ -1,11 +1,8 @@
-import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:logs/models/log.dart';
-import 'package:logs/widgets/accept_log_dialog.dart';
 
 class HiveDB {
-  Future<void> addNewLog(
-      {required String logName, required double hours}) async {
+  addNewLog({required String logName, required double hours}) {
     var logBox = Hive.box<Log>('logs');
 
     logBox.add(
@@ -13,10 +10,10 @@ class HiveDB {
     );
   }
 
-  Future<void> updateLog({
+  updateLog({
     required int index,
     required Log newLog,
-  }) async {
+  }) {
     try {
       var logBox = Hive.box<Log>('logs');
       logBox.putAt(index, newLog);
@@ -27,7 +24,25 @@ class HiveDB {
     }
   }
 
-  Future<void> deleteLog(int key) async {
+  incrementHoursSpent(int indexOfKey) {
+    var logBox = Hive.box<Log>('logs');
+    Log oldLog = logBox.getAt(indexOfKey)!;
+
+    oldLog.hours++;
+
+    logBox.putAt(indexOfKey, oldLog);
+  }
+
+  decrementHoursSpent(int indexOfKey) {
+    var logBox = Hive.box<Log>('logs');
+    Log oldLog = logBox.getAt(indexOfKey)!;
+
+    oldLog.hours--;
+
+    logBox.putAt(indexOfKey, oldLog);
+  }
+
+  deleteLog(int key) {
     var logBox = Hive.box<Log>('logs');
 
     try {
