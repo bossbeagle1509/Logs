@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:logs/models/hive_db.dart';
 
 enum LogOption {
   edit,
   delete,
 }
 
-class OptionsMenu extends StatefulWidget {
-  const OptionsMenu({Key? key}) : super(key: key);
+class OptionsMenu extends StatelessWidget {
+  final int index;
 
-  @override
-  _OptionsMenuState createState() => _OptionsMenuState();
-}
+  const OptionsMenu({
+    Key? key,
+    required this.index,
+  }) : super(key: key);
 
-class _OptionsMenuState extends State<OptionsMenu> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<LogOption>(
       tooltip: 'Options',
-      onSelected: (_) => _popupMenuFunction(_),
+      onSelected: (_) => _popupMenuFunction(
+        key: index,
+        menuOption: _,
+      ),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<LogOption>>[
         const PopupMenuItem<LogOption>(
           value: LogOption.edit,
@@ -32,4 +36,15 @@ class _OptionsMenuState extends State<OptionsMenu> {
   }
 }
 
-_popupMenuFunction(LogOption _menuOption) {}
+_popupMenuFunction({
+  required LogOption menuOption,
+  required int key,
+}) {
+  final HiveDB _hiveDB = HiveDB();
+
+  print(key);
+
+  if (menuOption == LogOption.delete) {
+    _hiveDB.deleteLog(key);
+  }
+}

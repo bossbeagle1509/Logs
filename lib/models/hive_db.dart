@@ -28,11 +28,11 @@ class HiveDB {
     }
   }
 
-  Future<void> deleteLog(int index) async {
-    var logBox = await Hive.openBox<Log>('logs');
+  Future<void> deleteLog(int key) async {
+    var logBox = Hive.box<Log>('logs');
 
     try {
-      logBox.deleteAt(index);
+      logBox.delete(key);
 
       print('deleted successfully');
     } catch (e) {

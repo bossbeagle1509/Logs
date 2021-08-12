@@ -106,9 +106,11 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          const Align(
+                          Align(
                             alignment: Alignment.topRight,
-                            child: OptionsMenu(),
+                            child: OptionsMenu(
+                              index: box.keyAt(index),
+                            ),
                           ),
                           Text(
                             box.getAt(index)!.name,
@@ -124,6 +126,7 @@ class _HomeState extends State<Home> {
                           ),
                           Text(
                             box.getAt(index)!.hours.toString() + ' hours spent',
+                            // box.getAt(index)!.hours.toString() + ' hours spent',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,
