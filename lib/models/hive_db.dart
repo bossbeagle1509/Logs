@@ -4,25 +4,22 @@ import 'package:logs/models/log.dart';
 class HiveDB {
   Future<void> addNewLog(
       {required String logName, required double hours}) async {
-    var logBox = await Hive.openBox<Log>('logs');
+    var logBox = Hive.box<Log>('logs');
 
     logBox.add(
       Log(name: logName, hours: hours),
     );
   }
 
-  Future<void> readLog(int index) async {
-    var logBox = await Hive.openBox<Log>('logs');
-  }
-
-  Future<void> updateLog(int index, {double? newValue}) async {
+  Future<void> updateLog({
+    required int index,
+    required Log newLog,
+  }) async {
     try {
-      var logBox = await Hive.openBox<Log>('logs');
-      Log existingLog = logBox.getAt(index)!;
-      existingLog.hours++;
-      logBox.putAt(index, existingLog);
+      var logBox = Hive.box<Log>('logs');
+      logBox.putAt(index, newLog);
 
-      print('completed updae successfully');
+      print('completed update successfully');
     } catch (e) {
       rethrow;
     }
@@ -32,7 +29,7 @@ class HiveDB {
     var logBox = Hive.box<Log>('logs');
 
     try {
-      logBox.delete(key);
+      logBox.deleteAt(key);
 
       print('deleted successfully');
     } catch (e) {
