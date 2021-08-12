@@ -1,5 +1,7 @@
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:logs/models/log.dart';
+import 'package:logs/widgets/accept_log_dialog.dart';
 
 class HiveDB {
   Future<void> addNewLog(

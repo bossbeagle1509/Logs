@@ -2,9 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logs/models/hive_db.dart';
+import 'package:logs/models/log.dart';
 
 class AcceptLogDialog extends StatefulWidget {
-  const AcceptLogDialog({Key? key}) : super(key: key);
+  final bool isThisAnUpdate;
+
+  /// Index of the key
+  final int? keyIndexToUpdateAt;
+
+  // from an already existing log
+  final double? loggedHours;
+  final String? name;
+
+  const AcceptLogDialog({
+    Key? key,
+    this.isThisAnUpdate = false,
+    this.keyIndexToUpdateAt,
+    this.name,
+    this.loggedHours,
+  }) : super(key: key);
 
   @override
   _AcceptLogDialogState createState() => _AcceptLogDialogState();
@@ -14,6 +30,19 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
   final HiveDB _hiveDB = HiveDB();
   late String logName;
   late double logHours;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _loggedHoursController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isThisAnUpdate) {
+      _nameController.text = widget.name!;
+      _loggedHoursController.text = widget.loggedHours!.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +83,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: TextFormField(
+                  controller: _nameController,
                   decoration: const InputDecoration(
                     labelStyle: TextStyle(color: Colors.white),
                     border: UnderlineInputBorder(),
@@ -72,6 +102,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: TextFormField(
+                  controller: _loggedHoursController,
                   decoration: const InputDecoration(
                     labelStyle: TextStyle(color: Colors.white),
                     border: UnderlineInputBorder(),
@@ -102,8 +133,19 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                       ),
                     ),
                     onPressed: () async {
-                      await _hiveDB.addNewLog(
-                          logName: logName, hours: logHours);
+                      widget.isThisAnUpdate
+                          ? await _hiveDB.updateLog(
+                              index: widget.keyIndexToUpdateAt!,
+                              newLog: Log(
+                                hours:
+                                    double.parse(_loggedHoursController.text),
+                                name: _nameController.text,
+                              ),
+                            )
+                          : await _hiveDB.addNewLog(
+                              logName: logName,
+                              hours: logHours,
+                            );
 
                       Get.back();
                     },

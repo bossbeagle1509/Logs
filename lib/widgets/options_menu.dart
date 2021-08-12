@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:logs/models/hive_db.dart';
+import 'package:logs/models/log.dart';
+import 'package:logs/widgets/accept_log_dialog.dart';
 
 enum LogOption {
   edit,
@@ -7,6 +11,7 @@ enum LogOption {
 }
 
 class OptionsMenu extends StatelessWidget {
+  /// Index of the key
   final int index;
 
   const OptionsMenu({
@@ -19,7 +24,7 @@ class OptionsMenu extends StatelessWidget {
     return PopupMenuButton<LogOption>(
       tooltip: 'Options',
       onSelected: (_) => _popupMenuFunction(
-        key: index,
+        keyIndex: index,
         menuOption: _,
       ),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<LogOption>>[
@@ -38,13 +43,26 @@ class OptionsMenu extends StatelessWidget {
 
 _popupMenuFunction({
   required LogOption menuOption,
-  required int key,
+  required int keyIndex,
 }) {
   final HiveDB _hiveDB = HiveDB();
 
-  print(key);
+  print(keyIndex);
 
   if (menuOption == LogOption.delete) {
-    _hiveDB.deleteLog(key);
+    _hiveDB.deleteLog(keyIndex);
+  } else {
+    var logBox = Hive.box<Log>('logs');
+
+    // print('got ' + logBox.getAt(keyIndex)!.hours.toString());
+
+    Get.dialog(
+      AcceptLogDialog(
+        isThisAnUpdate: true,
+        keyIndexToUpdateAt: keyIndex,
+        loggedHours: logBox.getAt(keyIndex)!.hours,
+        name: logBox.getAt(keyIndex)!.name,
+      ),
+    );
   }
 }

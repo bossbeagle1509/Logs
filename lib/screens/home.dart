@@ -6,7 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logs/models/hive_db.dart';
 import 'package:logs/models/log.dart';
 import 'package:logs/themes.dart';
-import 'package:logs/widgets/accept_log.dart';
+import 'package:logs/widgets/accept_log_dialog.dart';
 import 'package:logs/widgets/options_menu.dart';
 
 class Home extends StatefulWidget {
@@ -109,7 +109,7 @@ class _HomeState extends State<Home> {
                           Align(
                             alignment: Alignment.topRight,
                             child: OptionsMenu(
-                              index: box.keyAt(index),
+                              index: index,
                             ),
                           ),
                           Text(
@@ -126,7 +126,6 @@ class _HomeState extends State<Home> {
                           ),
                           Text(
                             box.getAt(index)!.hours.toString() + ' hours spent',
-                            // box.getAt(index)!.hours.toString() + ' hours spent',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 20,
