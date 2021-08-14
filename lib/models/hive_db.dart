@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:logs/models/log.dart';
+import 'log.dart';
 
 class HiveDB {
   addNewLog({required String logName, required double hours}) {
@@ -36,6 +36,10 @@ class HiveDB {
   decrementHoursSpent(int indexOfKey) {
     var logBox = Hive.box<Log>('logs');
     Log oldLog = logBox.getAt(indexOfKey)!;
+
+    if (oldLog.hours <= 0) {
+      return;
+    }
 
     oldLog.hours--;
 

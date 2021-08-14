@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logs/models/hive_db.dart';
 import 'package:logs/models/log.dart';
-import 'package:logs/themes.dart';
 import 'package:logs/widgets/accept_log_dialog.dart';
 import 'package:logs/widgets/options_menu.dart';
+
+import '../themes.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -76,28 +77,34 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: ValueListenableBuilder<Box<Log>>(
-        valueListenable: Hive.box<Log>('logs').listenable(),
-        builder: (context, box, _) {
-          if (box.isEmpty) {
-            return const Center(
-              child: Text('No logs yet ! Try adding some :)'),
-            );
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                shrinkWrap: true,
-                itemCount: box.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                ),
-                itemBuilder: (ctx, index) => SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: Card(
+      body: Container(
+        color: Colors.red,
+        height: 400,
+        width: 400,
+        child: ValueListenableBuilder<Box<Log>>(
+          valueListenable: Hive.box<Log>('logs').listenable(),
+          builder: (context, box, _) {
+            if (box.isEmpty) {
+              return const Center(
+                child: Text('No logs yet ! Try adding some :)'),
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  // scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: box.length,                  
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                  ),
+      
+                  //  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  //    maxCrossAxisExtent: 3
+                  // ),
+                  itemBuilder: (ctx, index) => Card(
                     // borderOnForeground: true,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(
@@ -156,10 +163,10 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-              ),
-            );
-          }
-        },
+              );
+            }
+          },
+        ),
       ),
     );
   }

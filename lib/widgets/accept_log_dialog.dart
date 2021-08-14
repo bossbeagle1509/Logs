@@ -1,8 +1,9 @@
+import 'package:logs/models/hive_db.dart';
+import 'package:logs/models/log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:logs/models/hive_db.dart';
-import 'package:logs/models/log.dart';
+
 
 class AcceptLogDialog extends StatefulWidget {
   final bool isThisAnUpdate;
@@ -49,118 +50,138 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
     return Material(
       color: Colors.transparent,
       child: Center(
-        child: Container(
-          color: Theme.of(context).primaryColor,
-          height: 300,
+        child: SizedBox(
+          height: 320,
           width: 350,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    onPressed: () => Get.back(),
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.red,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ),
-              // title
-              const Text(
-                'Add a Log',
-                style: TextStyle(fontSize: 20),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: UnderlineInputBorder(),
-                    labelText: 'Name the log',
-                  ),
-                  onChanged: (value) {
-                    logName = value;
-                  },
-                ),
-              ),
-
-              const SizedBox(
-                height: 20,
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: TextFormField(
-                  controller: _loggedHoursController,
-                  decoration: const InputDecoration(
-                    labelStyle: TextStyle(color: Colors.white),
-                    border: UnderlineInputBorder(),
-                    labelText: 'How much time did you spend ?',
-                  ),
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  onChanged: (value) {
-                    logHours = double.parse(value);
-                  },
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: SizedBox(
-                  width: 100,
-                  height: 40,
-                  child: TextButton(
-                    style:
-                        // flatButtonStyle,
-                        ButtonStyle(
-                      splashFactory: NoSplash.splashFactory,
-                      overlayColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.amber[800]!,
-                      ),
-                      backgroundColor: MaterialStateProperty.all(
-                        Colors.amber[600],
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            color: Theme.of(context).primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                        size: 20,
                       ),
                     ),
-                    onPressed: () async {
-                      widget.isThisAnUpdate
-                          ? await _hiveDB.updateLog(
-                              index: widget.keyIndexToUpdateAt!,
-                              newLog: Log(
-                                hours:
-                                    double.parse(_loggedHoursController.text),
-                                name: _nameController.text,
-                              ),
-                            )
-                          : await _hiveDB.addNewLog(
-                              logName: logName,
-                              hours: logHours,
-                            );
+                  ),
+                ),
+                // title
+                const Text(
+                  'Add a Log',
+                  style: TextStyle(fontSize: 20),
+                ),
 
-                      Get.back();
+                const SizedBox(
+                  height: 20,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      labelText: 'Name the log',
+                    ),
+                    onChanged: (value) {
+                      logName = value;
                     },
-                    child: Center(
-                      child: Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.bodyText1!.color,
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 20,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: TextFormField(
+                    controller: _loggedHoursController,
+                    decoration: const InputDecoration(
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      labelText: 'How many hours did you spend ?',
+                    ),
+                    inputFormatters: [
+                      WhitelistingTextInputFormatter(RegExp("[0-9]")),
+                    ],
+                    // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    onChanged: (value) {
+                      logHours = double.parse(value);
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    width: 100,
+                    height: 40,
+                    child: TextButton(
+                      style:
+                          // flatButtonStyle,
+                          ButtonStyle(
+                        splashFactory: NoSplash.splashFactory,
+                        overlayColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.amber[800]!,
+                        ),
+                        backgroundColor: MaterialStateProperty.all(
+                          Colors.amber[600],
+                        ),
+                      ),
+                      onPressed: () async {
+                        widget.isThisAnUpdate
+                            ? await _hiveDB.updateLog(
+                                index: widget.keyIndexToUpdateAt!,
+                                newLog: Log(
+                                  hours:
+                                      double.parse(_loggedHoursController.text),
+                                  name: _nameController.text,
+                                ),
+                              )
+                            : await _hiveDB.addNewLog(
+                                logName: logName,
+                                hours: logHours,
+                              );
+
+                        Get.back();
+                      },
+                      child: Center(
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.bodyText1!.color,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),
