@@ -14,6 +14,10 @@ Future<void> main() async {
   Hive.registerAdapter(LogAdapter());
 
   await Hive.openBox<Log>('logs');
+  await Hive.openBox('settings');
+
+  isDarkModeEnabled.value = Hive.box('settings').get('darkMode', defaultValue: true);
+
   runApp(const MyApp());
 }
 
@@ -23,13 +27,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Logs',
-      // themeMode: ThemeMode.dark,
-      theme: logDarkMode,
-      darkTheme: logDarkMode,
-      home: const Home(),
+    return ValueListenableBuilder<dynamic>(
+      valueListenable: Hive.box<dynamic>('settings').listenable(),
+      builder: (context, box, __) => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Logs',
+        theme: box.get('darkMode', defaultValue: true)
+            ? logDarkMode
+            : logLightMode,
+        home: const Home(),
+      ),
     );
   }
 }

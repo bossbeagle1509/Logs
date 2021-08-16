@@ -44,16 +44,17 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: () {
+              
               Get.changeTheme(
-                Get.isDarkMode ? logLightMode : logDarkMode,
+                isDarkModeEnabled.value ? logLightMode : logDarkMode,
               );
 
               isDarkModeEnabled.value = !isDarkModeEnabled.value;
-              print(Theme.of(context)
-                  .primaryTextTheme
-                  .bodyText1!
-                  .color
-                  .toString());
+
+              Hive.box('settings').put(
+                'darkMode',
+                isDarkModeEnabled.value
+              );
             },
             icon: Obx(
               () => Icon(
