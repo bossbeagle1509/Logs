@@ -123,7 +123,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                       labelText: 'How many hours did you spend ?',
                     ),
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(RegExp("[0-9]")),
+                      WhitelistingTextInputFormatter(RegExp("[0-9.]")),
                     ],
                     // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (value) {

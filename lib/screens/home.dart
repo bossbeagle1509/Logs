@@ -9,7 +9,6 @@ import 'package:logs/widgets/options_menu.dart';
 
 import '../themes.dart';
 
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -73,100 +72,95 @@ class _HomeState extends State<Home> {
                 const AcceptLogDialog(),
               );
             },
-            icon: const Icon(Icons.add),
+            icon: const Icon(
+              Icons.add,
+            ),
           ),
         ],
       ),
-      body: Container(
-        color: Colors.red,
-        height: 400,
-        width: 400,
-        child: ValueListenableBuilder<Box<Log>>(
-          valueListenable: Hive.box<Log>('logs').listenable(),
-          builder: (context, box, _) {
-            if (box.isEmpty) {
-              return const Center(
-                child: Text('No logs yet ! Try adding some :)'),
-              );
-            } else {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.builder(
-                  // scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: box.length,                  
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 5,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                  ),
-      
-                  //  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  //    maxCrossAxisExtent: 3
-                  // ),
-                  itemBuilder: (ctx, index) => Card(
-                    // borderOnForeground: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
+      body: ValueListenableBuilder<Box<Log>>(
+        valueListenable: Hive.box<Log>('logs').listenable(),
+        builder: (context, box, _) {
+          if (box.isEmpty) {
+            return const Center(
+              child: Text('No logs yet ! Try adding some :)'),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                // scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: box.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 5,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
+                ),
+
+                //  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                //    maxCrossAxisExtent: 3
+                // ),
+                itemBuilder: (ctx, index) => Card(
+                  // borderOnForeground: true,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: OptionsMenu(
-                              index: index,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: OptionsMenu(
+                            index: index,
+                          ),
+                        ),
+                        Text(
+                          box.getAt(index)!.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          box.getAt(index)!.hours.toString() + ' hours spent',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).textTheme.bodyText1!.color,
+                          ),
+                        ),
+                        const Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              onPressed: () =>
+                                  _hiveDB.decrementHoursSpent(index),
+                              icon: Icon(Icons.remove),
                             ),
-                          ),
-                          Text(
-                            box.getAt(index)!.name,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            box.getAt(index)!.hours.toString() + ' hours spent',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color,
-                            ),
-                          ),
-                          const Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(
-                                onPressed: () =>
-                                    _hiveDB.decrementHoursSpent(index),
-                                icon: Icon(Icons.remove),
-                              ),
-                              IconButton(
-                                onPressed: () =>
-                                    _hiveDB.incrementHoursSpent(index),
-                                icon: Icon(Icons.add),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                            IconButton(
+                              onPressed: () =>
+                                  _hiveDB.incrementHoursSpent(index),
+                              icon: const Icon(Icons.add),
+                            )
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 ),
-              );
-            }
-          },
-        ),
+              ),
+            );
+          }
+        },
       ),
     );
   }
