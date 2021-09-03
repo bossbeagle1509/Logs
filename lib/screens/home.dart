@@ -44,17 +44,13 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
             onPressed: () {
-              
               Get.changeTheme(
                 isDarkModeEnabled.value ? logLightMode : logDarkMode,
               );
 
               isDarkModeEnabled.value = !isDarkModeEnabled.value;
 
-              Hive.box('settings').put(
-                'darkMode',
-                isDarkModeEnabled.value
-              );
+              Hive.box('settings').put('darkMode', isDarkModeEnabled.value);
             },
             icon: Obx(
               () => Icon(
@@ -93,15 +89,18 @@ class _HomeState extends State<Home> {
                 // scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemCount: box.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 5,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                ),
-
-                //  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                //    maxCrossAxisExtent: 3
+                // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                //   crossAxisCount: 5,
+                //   crossAxisSpacing: 5,
+                //   mainAxisSpacing: 5,
                 // ),
+
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 270,
+                  mainAxisExtent: 250,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                ),
                 itemBuilder: (ctx, index) => Card(
                   // borderOnForeground: true,
                   shape: const RoundedRectangleBorder(
