@@ -4,19 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-
 class AcceptLogDialog extends StatefulWidget {
   final bool isThisAnUpdate;
 
   /// Index of the key
   final int? keyIndexToUpdateAt;
 
-  // from an already existing log
+  /// From an already existing log
   final double? loggedHours;
   final String? name;
+  final Map<DateTime, String>? dateLog;
 
   const AcceptLogDialog({
     Key? key,
+    this.dateLog,
     this.isThisAnUpdate = false,
     this.keyIndexToUpdateAt,
     this.name,
@@ -123,9 +124,8 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                       labelText: 'How many hours did you spend ?',
                     ),
                     inputFormatters: [
-                      WhitelistingTextInputFormatter(RegExp("[0-9.]")),
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
                     ],
-                    // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onChanged: (value) {
                       logHours = double.parse(value);
                     },
@@ -141,9 +141,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                     width: 100,
                     height: 40,
                     child: TextButton(
-                      style:
-                          // flatButtonStyle,
-                          ButtonStyle(
+                      style: ButtonStyle(
                         splashFactory: NoSplash.splashFactory,
                         overlayColor: MaterialStateColor.resolveWith(
                           (states) => Colors.amber[800]!,
@@ -160,6 +158,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                                   hours:
                                       double.parse(_loggedHoursController.text),
                                   name: _nameController.text,
+                                  dateLog: widget.dateLog!,
                                 ),
                               )
                             : await _hiveDB.addNewLog(

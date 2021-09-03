@@ -4,10 +4,12 @@ import 'package:hive/hive.dart';
 import 'package:logs/models/hive_db.dart';
 import 'package:logs/models/log.dart';
 import 'package:logs/widgets/accept_log_dialog.dart';
+import 'package:logs/widgets/display_log_dialog.dart';
 
 enum LogOption {
   edit,
   delete,
+  view,
 }
 
 class OptionsMenu extends StatelessWidget {
@@ -36,6 +38,10 @@ class OptionsMenu extends StatelessWidget {
           value: LogOption.delete,
           child: Text('Delete Log'),
         ),
+        const PopupMenuItem<LogOption>(
+          value: LogOption.view,
+          child: Text('View Log'),
+        ),
       ],
     );
   }
@@ -47,14 +53,10 @@ _popupMenuFunction({
 }) {
   final HiveDB _hiveDB = HiveDB();
 
-  print(keyIndex);
-
   if (menuOption == LogOption.delete) {
     _hiveDB.deleteLog(keyIndex);
-  } else {
+  } else if (menuOption == LogOption.edit) {
     var logBox = Hive.box<Log>('logs');
-
-    // print('got ' + logBox.getAt(keyIndex)!.hours.toString());
 
     Get.dialog(
       AcceptLogDialog(
@@ -62,7 +64,15 @@ _popupMenuFunction({
         keyIndexToUpdateAt: keyIndex,
         loggedHours: logBox.getAt(keyIndex)!.hours,
         name: logBox.getAt(keyIndex)!.name,
+        dateLog: logBox.getAt(keyIndex)!.dateLog,
       ),
+    );
+  } else if (menuOption == LogOption.view) {
+    var logBox = Hive.box<Log>('logs');
+    print(logBox.getAt(keyIndex)!);
+
+    Get.dialog(
+      DisplayLogDialog(logToDisplay: logBox.getAt(keyIndex)!),
     );
   }
 }

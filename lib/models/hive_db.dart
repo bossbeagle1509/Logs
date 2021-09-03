@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'log.dart';
 
 class HiveDB {
@@ -6,7 +7,13 @@ class HiveDB {
     var logBox = Hive.box<Log>('logs');
 
     logBox.add(
-      Log(name: logName, hours: hours),
+      Log(
+        name: logName,
+        hours: hours,
+        dateLog: {
+          DateTime.now():  'Log init with $hours'
+        },
+      ),
     );
   }
 
@@ -29,6 +36,10 @@ class HiveDB {
     Log oldLog = logBox.getAt(indexOfKey)!;
 
     oldLog.hours++;
+    oldLog.dateLog.putIfAbsent(
+      DateTime.now(),
+      () => '+' + oldLog.hours.toString(),
+    );
 
     logBox.putAt(indexOfKey, oldLog);
   }
@@ -42,6 +53,10 @@ class HiveDB {
     }
 
     oldLog.hours--;
+    oldLog.dateLog.putIfAbsent(
+      DateTime.now(),
+      () => '-' + oldLog.hours.toString(),
+    );
 
     logBox.putAt(indexOfKey, oldLog);
   }

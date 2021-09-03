@@ -102,7 +102,6 @@ class _HomeState extends State<Home> {
                   crossAxisSpacing: 5,
                 ),
                 itemBuilder: (ctx, index) => Card(
-                  // borderOnForeground: true,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(15),
@@ -130,7 +129,12 @@ class _HomeState extends State<Home> {
                           height: 20,
                         ),
                         Text(
-                          box.getAt(index)!.hours.toString() + ' hours spent',
+                          // for my OCD
+                          box.getAt(index)!.hours > 1
+                              ? box.getAt(index)!.hours.toString() +
+                                  ' hours spent'
+                              : box.getAt(index)!.hours.toString() +
+                                  ' hour spent',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -144,7 +148,7 @@ class _HomeState extends State<Home> {
                             IconButton(
                               onPressed: () =>
                                   _hiveDB.decrementHoursSpent(index),
-                              icon: Icon(Icons.remove),
+                              icon: const Icon(Icons.remove),
                             ),
                             IconButton(
                               onPressed: () =>
