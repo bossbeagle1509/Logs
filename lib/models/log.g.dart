@@ -20,19 +20,22 @@ class LogAdapter extends TypeAdapter<Log> {
       name: fields[0] as String,
       hours: fields[1] as double,
       dateLog: (fields[2] as Map).cast<DateTime, String>(),
+      logColorAsInt: fields[3] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Log obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.hours)
       ..writeByte(2)
-      ..write(obj.dateLog);
+      ..write(obj.dateLog)
+      ..writeByte(3)
+      ..write(obj.logColorAsInt);
   }
 
   @override

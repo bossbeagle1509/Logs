@@ -14,6 +14,7 @@ class AcceptLogDialog extends StatefulWidget {
   final double? loggedHours;
   final String? name;
   final Map<DateTime, String>? dateLog;
+  final int? logColorAsInt;
 
   const AcceptLogDialog({
     Key? key,
@@ -22,6 +23,7 @@ class AcceptLogDialog extends StatefulWidget {
     this.keyIndexToUpdateAt,
     this.name,
     this.loggedHours,
+    this.logColorAsInt,
   }) : super(key: key);
 
   @override
@@ -159,6 +161,7 @@ class _AcceptLogDialogState extends State<AcceptLogDialog> {
                                       double.parse(_loggedHoursController.text),
                                   name: _nameController.text,
                                   dateLog: widget.dateLog!,
+                                  logColorAsInt: widget.logColorAsInt!,
                                 ),
                               )
                             : await _hiveDB.addNewLog(

@@ -19,8 +19,9 @@ class DisplayLogDialog extends StatelessWidget {
           height: 320,
           width: 450,
           child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             color: Theme.of(context).primaryColor,
             child: ListView.builder(
               itemCount: logToDisplay.dateLog.length,

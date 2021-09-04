@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart' show Color, Colors;
 import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'log.dart';
 
 class HiveDB {
@@ -10,9 +10,8 @@ class HiveDB {
       Log(
         name: logName,
         hours: hours,
-        dateLog: {
-          DateTime.now():  'Log init with $hours'
-        },
+        dateLog: {DateTime.now(): 'Log init with $hours'},
+        logColorAsInt: Colors.white.value,
       ),
     );
   }
@@ -24,6 +23,23 @@ class HiveDB {
     try {
       var logBox = Hive.box<Log>('logs');
       logBox.putAt(index, newLog);
+
+      print('completed update successfully');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  updateColor({
+    required int index,
+    required int color,
+  }) {
+    try {
+      var logBox = Hive.box<Log>('logs');
+
+      Log oldLog = logBox.getAt(index)!;
+      oldLog.logColorAsInt = color;
+      logBox.putAt(index, oldLog);
 
       print('completed update successfully');
     } catch (e) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:logs/models/hive_db.dart';
@@ -10,6 +11,7 @@ enum LogOption {
   edit,
   delete,
   view,
+  changeColor,
 }
 
 class OptionsMenu extends StatelessWidget {
@@ -40,7 +42,11 @@ class OptionsMenu extends StatelessWidget {
         ),
         const PopupMenuItem<LogOption>(
           value: LogOption.view,
-          child: Text('View Log'),
+          child: Text('View Logs'),
+        ),
+        const PopupMenuItem<LogOption>(
+          value: LogOption.changeColor,
+          child: Text('Change Color'),
         ),
       ],
     );
@@ -69,10 +75,33 @@ _popupMenuFunction({
     );
   } else if (menuOption == LogOption.view) {
     var logBox = Hive.box<Log>('logs');
-    print(logBox.getAt(keyIndex)!);
 
     Get.dialog(
       DisplayLogDialog(logToDisplay: logBox.getAt(keyIndex)!),
+    );
+  } else if (menuOption == LogOption.changeColor) {
+    Get.dialog(
+      Material(
+        color: Colors.transparent,
+        child: SizedBox(
+          height: 320,
+          width: 450,
+          child: MaterialColorPicker(
+            allowShades: false,
+            onMainColorChange: (ColorSwatch? color) {
+              HiveDB _hiveDB = HiveDB();
+              _hiveDB.updateColor(
+                index: keyIndex,
+                color: color!.value,
+              );
+
+              Get.back();
+            },
+            selectedColor: Colors.grey,
+          ),
+        ),
+      ),
+      barrierDismissible: true,
     );
   }
 }

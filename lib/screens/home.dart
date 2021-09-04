@@ -122,7 +122,7 @@ class _HomeState extends State<Home> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
-                            color: Theme.of(context).textTheme.bodyText1!.color,
+                            color: Color(box.getAt(index)!.logColorAsInt),
                           ),
                         ),
                         const SizedBox(
